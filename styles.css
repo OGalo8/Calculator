@@ -1,0 +1,84 @@
+:root {
+  --primary-color: red;
+  --secondary-color: green;
+  --tertiary-color: blue;
+  --cuaternary-color: white;
+}
+
+*,
+*::after,
+*::before {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+}
+
+html {
+  display: flex;
+  justify-content: center;
+  height: 100%;
+  border: 1px solid var(--tertiary-color);
+}
+
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100vh;
+  border: 1px solid var(--secondary-color);
+  background-color: gray;
+}
+
+.main-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 50%;
+  height: 80%;
+  border: 1px solid var(--primary-color);
+}
+
+.screen {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding-right: 4%;
+  flex: auto;
+  margin-top: 2%;
+  width: 90%;
+  border: 1px solid var(--primary-color);
+  border-radius: 8px;
+  background-color: var(--cuaternary-color);
+  font-size: 300%;
+}
+
+.buttons-container {
+  display: flex;
+  flex: auto;
+  align-items: center;
+  width: 90%;
+  height: 70%;
+  flex-direction: column;
+  margin: 2%;
+  border: 1px solid var(--primary-color);
+  border-radius: 8px;
+}
+
+.row {
+  display: flex;
+  flex: auto;
+  width: 100%;
+}
+
+button {
+  width: 25%;
+  border-radius: 8px;
+  font-size: 150%;
+}
+
+#zero-button {
+  width: 50%;
+}
