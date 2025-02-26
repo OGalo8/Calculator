@@ -24,3 +24,7 @@ Will now add logic to:
 - Toggle button color (maybe there is already an option for this. All colors should reset with reboot function)
 - Show only 2 decimal places per result.
 - Limit the maximum number of digits available OR reduce the size of the font in the display
+
+- BUG when pressing . after =
+
+\*A flag has been added for when the user press the = button

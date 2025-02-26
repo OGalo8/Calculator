@@ -1,80 +1,85 @@
 let firstDigit = 0;
 let secondDigit = 0;
 let operation;
+let result;
+
 let toCalculate = [];
 
-let calculationDone = false;
+let lastEqualFlag = false;
 
 let operationRegex = /[x\+\-%/=]/;
-let secondDigitRegex = /[x\+\-%/=]\d+/;
+let secondDigitRegex = /[x\+\-%/=][\d\.]+/;
 
 const myButtons = document.querySelector(".buttons-container");
+const allBtns = document.querySelectorAll("button");
 
 const display = document.querySelector("#screen-output");
 
-const allBtns = document.querySelectorAll("button");
-
-allBtns.forEach((button) => {
-  switch (button.className) {
-    case "sign-button":
-      button.value = -1;
-      break;
-    default:
-      button.value = button.innerHTML;
-      break;
-  }
-});
+const decimalPointBtn = document.querySelector("#decimal-point-button");
 
 function showOnDisplay(e) {
-  if (display.innerHTML == 0) display.innerHTML = "";
-
   let currentSelector = e.target;
   let pressedBtnValue = e.target.value;
   let pressedBtnClass = e.target.className;
+  let pressedBtnId = e.target.id;
 
   switch (pressedBtnClass) {
     case "digit-button":
-      if (calculationDone == true) resetVariables();
-      console.log(pressedBtnValue, firstDigit, toCalculate, calculationDone); //remove later
+      if (display.innerHTML == 0) display.innerHTML = "";
+      if (lastEqualFlag == true) {
+        lastEqualFlag = !lastEqualFlag;
+        reset();
+      }
+
       display.innerHTML += pressedBtnValue;
+
+      if (pressedBtnId == "decimal-point-button") {
+        decimalPointBtn.value = "";
+      }
+
       break;
     case "ac-button":
-      resetVariables();
+      reset();
+      display.innerHTML = "0";
       break;
     case "sign-button":
       display.innerHTML *= pressedBtnValue;
       break;
     case "operation-button":
-      firstDigit = display.innerHTML;
+      if (lastEqualFlag == true) {
+        toCalculate = [];
+        lastEqualFlag = !lastEqualFlag;
+      }
+
+      if (decimalPointBtn.value == "") decimalPointBtn.value = "."; //this reactivates the decimal point button
+      deactivateOperationsBtns();
+      firstDigit = display.innerHTML; //we capture the first digit without the operator
       toCalculate.push(firstDigit);
-      operation = pressedBtnValue.match(operationRegex)[0];
+      operation = pressedBtnValue.match(operationRegex)[0]; // we extract the operator from the pressedBtnValue striing
       toCalculate.push(operation);
 
-      display.innerHTML += operation;
-
-      console.log(firstDigit, operation, toCalculate, calculationDone); //remove later
+      display.innerHTML += operation; //showing the full string (including operator)
 
       currentSelector.style.backgroundColor = "red";
 
       break;
     case "equal-button":
-      let almostSecondDigit = display.innerHTML.match(secondDigitRegex)[0];
-      secondDigit = Number(almostSecondDigit.slice(1));
+      let almostSecondDigit = display.innerHTML.match(secondDigitRegex)[0]; //we extract the 2nd digit with the operator
+      secondDigit = Number(almostSecondDigit.slice(1)); // removing the operator
       toCalculate.push(secondDigit);
 
       currentSelector.style.backgroundColor = "green";
 
-      let result = operate();
-      display.innerHTML = result;
+      result = operate(); //switch to know how to operate the array items
+      display.innerHTML = result; // erase current display and show the result
 
-      console.log(result);
-      calculationDone = true;
-
-      startCalculating();
-      console.log(pressedBtnValue, toCalculate, calculationDone);
+      lastEqualFlag = true;
+      reactivateOperationsBtns();
+      startCalculating(); //will remove the current event listeners and
 
       break;
   }
+  console.log(toCalculate, "lastEqualFlag:", lastEqualFlag);
 }
 
 function startCalculating() {
@@ -83,18 +88,21 @@ function startCalculating() {
   myButtons.addEventListener("click", handleButtonClick); // Adds a new event listener
 }
 
-function resetVariables() {
-  firstDigit = 0;
-  secondDigit = 0;
-  toCalculate = [];
-  display.innerHTML = "";
-  calculationDone = false;
-}
-
 function handleButtonClick(e) {
   if (e.target.matches("button")) {
     showOnDisplay(e);
   }
+}
+
+function reset() {
+  if (decimalPointBtn.value == "") decimalPointBtn.value = ".";
+  firstDigit = 0;
+  secondDigit = 0;
+  toCalculate = [];
+  display.innerHTML = "";
+  lastEqualFlag = false;
+  reactivateOperationsBtns();
+  assignValueToButtons(); //setear de nuevo el valor de todos los botones
 }
 
 function operate() {
@@ -116,7 +124,34 @@ function operate() {
       currentResult = toCalculate[0] - toCalculate[2];
       break;
   }
-  return currentResult;
+  return Math.round((currentResult + Number.EPSILON) * 100) / 100;
 }
 
+function assignValueToButtons() {
+  allBtns.forEach((button) => {
+    if (button.className == "sign-button") {
+      button.value = -1;
+    } else {
+      button.value = button.innerHTML;
+    }
+  });
+}
+
+function deactivateOperationsBtns() {
+  allBtns.forEach((button) => {
+    if (button.className == "operation-button") {
+      button.disabled = true;
+    }
+  });
+}
+
+function reactivateOperationsBtns() {
+  allBtns.forEach((button) => {
+    if (button.className == "operation-button") {
+      button.disabled = false;
+    }
+  });
+}
+
+assignValueToButtons();
 startCalculating();
