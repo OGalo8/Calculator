@@ -18,13 +18,12 @@ Basic functionality is now complete.
 
 Will now add logic to:
 
-- Prevent using more than one decimal point per digit.
-- Prevent using more than one operation per calculation (limiting the lenght of the array so it executes the calculations when lenght == 3 might help)
-- Add functionality to the % button
 - Toggle button color (maybe there is already an option for this. All colors should reset with reboot function)
-- Show only 2 decimal places per result.
-- Limit the maximum number of digits available OR reduce the size of the font in the display
+- Limit the maximum number of digits available OR reduce the size of the font in the display.
+- eliminate BUG in the +/- sign after pressing an operation button
+- Add a backspace button :,v
+- Add keyboard support
+- show 0. when pressing point after an equal or if no number has been pressed.
+- Modify span (screen) styling when the digits are too large, so results show in a smaller font (setAttribute(style,font-size, etc))
 
-- BUG when pressing . after =
-
-\*A flag has been added for when the user press the = button
+And finish styling it.
